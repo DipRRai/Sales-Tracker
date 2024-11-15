@@ -1,0 +1,13 @@
+body {
+    margin: 0;
+}
+#menu {
+    margin: 0 40px;
+}
+
+.details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+}
