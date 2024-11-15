@@ -21,9 +21,9 @@
     <div id="navbar">
         <h1>Create Your Menu</h1>
         <div id="qrcode" style="width:100px; height:100px; margin-top:15px;"></div>
-        <h2 id="url"></h2>
+        
     </div>
-
+    <h2 id="url"></h2>
     <script>
         var url = document.getElementById('url');
         var qrcode = new QRCode(document.getElementById("qrcode"), {
