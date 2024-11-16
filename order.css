@@ -1,6 +1,7 @@
 body {
     margin: 0;
 }
+
 #menu {
     margin: 0 40px;
 }
@@ -10,4 +11,23 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-top: 5px;
+}
+
+#order_ui {
+
+}
+
+.ui_select {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.ui_select p {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.ui_select .increment {
+    height: 30px;
+    width: 30px;
 }

@@ -20,20 +20,23 @@
 <a href="dashboard.php">Dashboard</a>
     <div id="navbar">
         <h1>Create Your Menu</h1>
-        <div id="qrcode" style="width:100px; height:100px; margin-top:15px;"></div>
-        
+        <a id="qrLink" href="#">
+            <div id="qrcode" style="width:100px; height:100px; margin-top:15px;"></div>
+        </a>
     </div>
-    <h2 id="url"></h2>
     <script>
-        var url = document.getElementById('url');
         var qrcode = new QRCode(document.getElementById("qrcode"), {
             width: 100,
             height: 100
         });
+
         var currentUrl = window.location.href;
         var baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1);
-        qrcode.makeCode(baseUrl + "order.php?menu=" + <?php echo $_SESSION['uid']; ?>);
-        url.innerHTML = baseUrl + "order.php?menu=" + <?php echo $_SESSION['uid']; ?>;
+        var redirectUrl = baseUrl + "order.php?menu=" + <?php echo json_encode($_SESSION['uid']); ?>;
+
+        qrcode.makeCode(redirectUrl);
+        var qrLink = document.getElementById("qrLink");
+        qrLink.setAttribute("href", redirectUrl);
     </script>
 
     <form action="menu_editor.php" method="post" id="menuForm">

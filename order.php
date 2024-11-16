@@ -11,6 +11,7 @@
 </head>
 <body>
     <?php 
+            include('header.html');
             $query = "SELECT * FROM menu WHERE uID = " . $_GET['menu'] ;
             $result = mysqli_query($conn, $query);  
             echo "<div id='menu'>";
@@ -19,12 +20,20 @@
                         <h2>{$row['name']}</h2>
                         <div class='details'>
                             <h3>{$row['description']}</h3>
-                            <h3 class='price'>$ {$row['price']}</h3>
+                            <div id='order_ui>
+                                <h3 class='price'>$ {$row['price']}</h3>
+                                <div class='ui_select'>
+                                    <input type='button' class='increment' value='-'>
+                                    <p>0</p>
+                                    <input type='button' class='increment' value='+'>
+                                </div>
+                            </div>
                         </div>
                     </div>";
             }
             echo "</div>";
         ?>
-    
+        <button id="submitOrder">Submit Order</button>
+        <script src="order.js"></script>
 </body>
 </html>
