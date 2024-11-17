@@ -1,0 +1,22 @@
+#navbar {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    height: 150px;
+    padding-bottom: 50px;
+    background-color: #222831;
+}
+
+#navbar h1 {
+    color: #00ADB5;
+    margin: 0;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#main-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 50px;
+}

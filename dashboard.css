@@ -1,0 +1,13 @@
+#options {
+    display: flex;
+    justify-content: center;
+    margin: 10% 0;
+}
+
+.option-form{
+    margin: 0 15px;
+}
+
+.option-button {
+    padding: 50px;
+}

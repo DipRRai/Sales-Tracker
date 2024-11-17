@@ -11,19 +11,49 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js" integrity="sha512-L0Shl7nXXzIlBSUUPpxrokqq4ojqgZFQczTYlGjzONGTDAcLremjwaWv5A+EDLnxhQzY5xUZPWLOLqYRkY0Cbw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="text/javascript" src="qrcode.js"></script>
-    <link rel="stylesheet" href="menu_editor.css">
+    <link rel="stylesheet" href="base.css">
+    <link rel="stylesheet" href="menu_edit.css">
     <style>
         .dish-entry { margin-bottom: 10px; }
     </style>
 </head>
 <body>
-<a href="dashboard.php">Dashboard</a>
     <div id="navbar">
         <h1>Create Your Menu</h1>
-        <a id="qrLink" href="#">
-            <div id="qrcode" style="width:100px; height:100px; margin-top:15px;"></div>
-        </a>
     </div>
+    <form action="menu_editor.php" method="post" id="menuForm">
+        <div id="main-container">
+            <div id="dish-container">
+                <?php
+                    include('database.php');
+                    $query = "SELECT * FROM menu WHERE uID = '" . $_SESSION['uid'] . "'";
+                    $result = mysqli_query($conn, $query);
+                    // Check if query was successful
+                    if ($result) {
+                        // Loop through each row and echo the data
+                        while ($row = $result->fetch_assoc()) {
+                            // You can echo specific fields from the row
+                            echo '
+                            <div class="dish-entry">
+                                <label>Dish Name: <input type="text" name="dish_name[]" value="' . $row['name'] . '" required></label><br>
+                                <label>Price: <input type="number" name="price[]" step="0.01" value="' . $row['price'] . '" required></label><br>
+                                <label>Description: <input type="text" name="description[]" value="' . $row['description'] . '" required></label><br>
+                                <button type="button" class="deleteDish" data-name="' . $row['name'] . '">Delete</button><br><br>
+                            </div>
+                        ';
+                        }
+                    } else {
+                        echo "Error: " . $mysqli->error;
+                    }
+                ?>
+            </div>
+            <div id="qr-container">
+                <a id="qrLink" href="#"><div id="qrcode" style="width:100px; height:100px; margin-top:15px;"></div></a>
+            </div>
+        </div>
+        <button type="button" onclick="addDishEntry()">Add Dish</button>
+        <button type="submit" name="generateQR">Save Changes</button>
+    </form>
     <script>
         var qrcode = new QRCode(document.getElementById("qrcode"), {
             width: 100,
@@ -39,36 +69,38 @@
         qrLink.setAttribute("href", redirectUrl);
     </script>
 
-    <form action="menu_editor.php" method="post" id="menuForm">
-        <div id="dishContainer">
-            <?php
-            include('database.php');
-            $query = "SELECT * FROM menu WHERE uID = '" . $_SESSION['uid'] . "'";
-            $result = mysqli_query($conn, $query);
-            // Check if query was successful
-            if ($result) {
-                // Loop through each row and echo the data
-                while ($row = $result->fetch_assoc()) {
-                    // You can echo specific fields from the row
-                    echo '
-                    <div class="dish-entry">
-                        <label>Dish Name: <input type="text" name="dish_name[]" value="' . $row['name'] . '" required></label><br>
-                        <label>Price: <input type="number" name="price[]" step="0.01" value="' . $row['price'] . '" required></label><br>
-                        <label>Description: <input type="text" name="description[]" value="' . $row['description'] . '" required></label><br>
-                        <button type="button" class="deleteDish" data-name="' . $row['name'] . '">Delete</button><br>
-                    </div>
-                ';
+    <script>
+        // Function to add a new dish entry
+        function addDishEntry() {
+            const dishEntry = `
+                <div class="dish-entry">
+                    <label>Dish Name: <input type="text" name="dish_name[]" value="Tonkotsu Ramen" required></label><br>
+                    <label>Price: <input type="number" name="price[]" step="0.01" value="15.99" required></label><br>
+                    <label>Description: <input type="text" name="description[]" value="Extra Spicy" required></label><br>
+                    <button type="button" class="deleteDish">Delete</button><br>
+                </div>
+            `;
+            $('#dish-container').append(dishEntry);
+        }
+
+        $(document).on('click', '.deleteDish', function() {
+        const dishEntry = $(this).closest('.dish-entry');
+        const dishName = dishEntry.find('input[name="dish_name[]"]').val();
+
+        if (dishName) {
+            $.ajax({
+                url: 'delete_dish.php',
+                type: 'POST',
+                data: { dishName: dishName },
+                success: function(response) {
+                    //alert("Dish Deleted: " + response);
                 }
-            } else {
-                echo "Error: " . $mysqli->error;
-            }
-            ?>
-            <!-- Dish entries will be added here -->
-        </div>
-        <button type="button" onclick="addDishEntry()">Add Dish</button>
-        <button type="submit" name="generateQR">Save Changes</button>
-    </form>
-    <script src="menu_editor.js"></script>
+            });
+        }
+
+        dishEntry.remove(); // Remove the dish entry from the DOM
+        });
+    </script>
 </body>
 </html>
 
@@ -114,16 +146,10 @@ if (isset($_POST['generateQR'])) {
             $desc = $description[$i];
             
             $stmt->execute();
-
-            // echo '<div class="submitted-dish">';
-            // echo '<p><strong>Dish Name:</strong> ' . htmlspecialchars($dishName) . '</p>';
-            // echo '<p><strong>Price:</strong> ' . htmlspecialchars($price) . '</p>';
-            // echo '<p><strong>Description:</strong> ' . htmlspecialchars($desc) . '</p>';
-            // echo '</div>';
         }
-        echo '<div class="submitted-data"><h2>Dishes Saved</h2>';
-        echo '</div>';
-        header('Location: menu_editor.php');
+        // header('Location: menu_editor.php');
+        // echo '<div class="submitted-data"><h2>Dishes Saved</h2> </div>';
+        // exit;
     }
 }
 ?>
