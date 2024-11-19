@@ -11,10 +11,39 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.min.js" integrity="sha512-L0Shl7nXXzIlBSUUPpxrokqq4ojqgZFQczTYlGjzONGTDAcLremjwaWv5A+EDLnxhQzY5xUZPWLOLqYRkY0Cbw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="text/javascript" src="qrcode.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="base.css">
     <link rel="stylesheet" href="menu_edit.css">
     <style>
-        .dish-entry { margin-bottom: 10px; }
+        .dish-entry { 
+            border: solid;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        #main-container {
+            display: flex;
+            flex-direction: row;
+            padding: 50px;
+            padding-bottom: 10px;
+        }
+
+        #dish-container {
+            flex-grow: 20;
+        }
+
+        #qr-container {
+            flex-grow: 1;
+            display: flex; /* To center the QR code inside */
+            justify-content: center;
+        }
+        .desc {
+            margin-bottom: 7px;
+        }
+        #toolbar {
+            margin-left: 50px;
+            padding-bottom: 50px;
+        }
     </style>
 </head>
 <body>
@@ -35,10 +64,13 @@
                             // You can echo specific fields from the row
                             echo '
                             <div class="dish-entry">
-                                <label>Dish Name: <input type="text" name="dish_name[]" value="' . $row['name'] . '" required></label><br>
-                                <label>Price: <input type="number" name="price[]" step="0.01" value="' . $row['price'] . '" required></label><br>
-                                <label>Description: <input type="text" name="description[]" value="' . $row['description'] . '" required></label><br>
-                                <button type="button" class="deleteDish" data-name="' . $row['name'] . '">Delete</button><br><br>
+                                <label>Dish Name: </label>
+                                <input type="text" class="form-control" name="dish_name[]" value="' . $row['name'] . '" required>
+                                <label>Price: </label>
+                                <input type="number" class="form-control" name="price[]" step="0.01" value="' . $row['price'] . '" required>
+                                <label>Description: </label>
+                                <input type="text" class="form-control desc" name="description[]" value="' . $row['description'] . '" required>
+                                <button type="button" class="deleteDish" data-name="' . $row['name'] . '">Delete</button><br>
                             </div>
                         ';
                         }
@@ -51,8 +83,10 @@
                 <a id="qrLink" href="#"><div id="qrcode" style="width:100px; height:100px; margin-top:15px;"></div></a>
             </div>
         </div>
-        <button type="button" onclick="addDishEntry()">Add Dish</button>
-        <button type="submit" name="generateQR">Save Changes</button>
+        <div id="toolbar">
+            <button type="button" onclick="addDishEntry()">Add Dish</button>
+            <button type="submit" name="generateQR">Save Changes</button>
+        </div>
     </form>
     <script>
         var qrcode = new QRCode(document.getElementById("qrcode"), {
@@ -74,9 +108,12 @@
         function addDishEntry() {
             const dishEntry = `
                 <div class="dish-entry">
-                    <label>Dish Name: <input type="text" name="dish_name[]" value="Tonkotsu Ramen" required></label><br>
-                    <label>Price: <input type="number" name="price[]" step="0.01" value="15.99" required></label><br>
-                    <label>Description: <input type="text" name="description[]" value="Extra Spicy" required></label><br>
+                    <label>Dish Name: </label>
+                    <input type="text" class="form-control" name="dish_name[]" value="" required><br>
+                    <label>Price: </label>
+                    <input type="number" class="form-control" name="price[]" step="0.01" value="" required><br>
+                    <label>Description: </label>
+                    <input type="text" class="form-control" name="description[]" value="    " required><br>
                     <button type="button" class="deleteDish">Delete</button><br>
                 </div>
             `;

@@ -1,1 +1,0 @@
-const disp = document.getElementById('test');
