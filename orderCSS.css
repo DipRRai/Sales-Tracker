@@ -1,0 +1,12 @@
+html {
+    padding: 50px;
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #DEAA79;
+    height: 100vh - 100px;
+}
+body {
+    background-color: #FFE6A9;
+    height: 85vh;
+    border-radius: 5%;
+    padding: 10px;
+}
