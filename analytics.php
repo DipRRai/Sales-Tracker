@@ -9,8 +9,8 @@
     <title>Document</title>
     <style>
         .graph {
-            padding-left: 250px;
-            padding-right: 250px;
+            padding-left: 50px;
+            padding-right: 50px;
         }
     </style>
 </head>
@@ -23,21 +23,32 @@
             <h1>Welcome {$_SESSION['username']}<br>
         </div>";
     ?>
+    <select id="mode">
+        <option value="hist_dish">Group orders by dish</option>
+        <option value="test">test</option>
+    </select>
+
     <div class="graph">
         <h1>Total orders by dishID</h1>
         <canvas id="myChart"></canvas>
     </div>
     <script>
+    document.getElementById('mode').addEventListener('change', function (){
+    var selectedMode = this.value;
+    console.log(selectedMode);
+    // console.log(`data.php?filter=${selectedMode}`);
+
     // Fetch data from the PHP endpoint
-    fetch('data.php')
+    if (selectedMode == 'hist_dish') {
+        fetch(`data.php?mode=${selectedMode}`)
         .then(response => response.json())
         .then(data => {
             // Process the data
-            const labels = data.map(item => item.dishID);
+            const labels = data.map(item => item.dishName);
             const values = data.map(item => item.quantity);
-            console.log(data);
-            console.log(values);
-            console.log(labels);
+            // console.log(data);
+            // console.log(values);
+            // console.log(labels);
 
             // Create the chart
             const ctx = document.getElementById('myChart').getContext('2d');
@@ -63,6 +74,13 @@
             });
         })
         .catch(error => console.error('Error fetching data:', error));
+    } 
+    if (selectedMode == 'test'){
+        console.log('test');
+    }
+
+
+    })
 </script>
 </body>
 </html>
